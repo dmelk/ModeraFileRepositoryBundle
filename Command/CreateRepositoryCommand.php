@@ -36,7 +36,13 @@ class CreateRepositoryCommand extends ContainerAwareCommand
             'filesystem' => $input->getArgument('filesystem')
         );
 
-        $repository = $fr->createRepository($input->getArgument('name'), $config, $input->getArgument('label'));
+        $name = $input->getArgument('name');
+        if ($fr->getRepository($name) !== null) {
+            $output->writeln("Repository with name " . $name . " already exists");
+            return;
+        }
+
+        $repository = $fr->createRepository($name, $config, $input->getArgument('label'));
 
         $output->writeln("Repository has been successfully created! Its internal is #" . $repository->getId());
     }
